@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package search;
+
+service SearchService {
+  rpc SearchHotels (SearchRequest) returns (SearchResponse);
+  rpc GetHotel (GetHotelRequest) returns (HotelResponse);
+  rpc GetAvailableRooms (AvailableRoomsRequest) returns (AvailableRoomsResponse);
+}
+
+message SearchRequest {
+  string city = 1;
+  string check_in = 2;
+  string check_out = 3;
+  int32 guests = 4;
+  double min_price = 5;
+  double max_price = 6;
+  int32 min_stars = 7;
+}
+
+message GetHotelRequest {
+  string hotel_id = 1;
+}
+
+message AvailableRoomsRequest {
+  string hotel_id = 1;
+  string check_in = 2;
+  string check_out = 3;
+  int32 guests = 4;
+}
+
+message HotelResponse {
+  string hotel_id = 1;
+  string name = 2;
+  string city = 3;
+  string address = 4;
+  int32 stars = 5;
+  double rating = 6;
+  string description = 7;
+  repeated string amenities = 8;
+  double price_per_night = 9;
+}
+
+message RoomResponse {
+  string room_id = 1;
+  string hotel_id = 2;
+  string room_type = 3;
+  int32 capacity = 4;
+  double price_per_night = 5;
+  bool is_available = 6;
+  repeated string amenities = 7;
+}
+
+message SearchResponse {
+  repeated HotelResponse hotels = 1;
+  int32 total = 2;
+}
+
+message AvailableRoomsResponse {
+  repeated RoomResponse rooms = 1;
+}
