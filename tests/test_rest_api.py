@@ -43,6 +43,7 @@ class SearchResponse(BaseModel):
     ('Barcelona', '2026-08-01', '2026-08-05', 1),
 ])
 def test_search_hotel(city, check_in, check_out, guests):
+
     url = 'http://localhost:8080/hotels'
     response = requests.get(url, params={'city': city, 'check_in': check_in, 'check_out': check_out})
     assert response.status_code == 200
@@ -52,7 +53,7 @@ def test_search_hotel(city, check_in, check_out, guests):
     assert data.hotels[0].city == city
 
 
-def test_create_hotel():
+def test_create_hotel(register_user):
 
 
     faker = Faker()
@@ -72,6 +73,7 @@ def test_create_hotel():
         'auto.offset.reset': 'earliest'
     })
     consumer.subscribe(['booking.created'])
-    response = requests.post(url, json=payload)
+    headers = {'Authorization': f'Bearer {register_user['token']}'}
+    response = requests.post(url, json=payload, headers=headers)
     assert response.status_code == 201
     consumer.close()

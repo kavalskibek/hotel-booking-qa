@@ -2,8 +2,12 @@ import grpc
 import pytest
 import psycopg2
 import os
+
+import requests
 from dotenv import load_dotenv
 import sys
+
+from faker import Faker
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "generated"))
 
@@ -55,3 +59,24 @@ def db_cursor(db):
     yield cur
     db.rollback()
     cur.close()
+
+
+
+@pytest.fixture
+def register_user():
+    fake = Faker()
+    payload = {
+        "email": fake.email(),
+        'password': fake.password(),
+        'name': fake.name(),
+    }
+
+    response = requests.post("http://localhost:8080/auth/register", json=payload)
+    data = response.json()
+
+    return {
+        "email": payload["email"],
+        "password": payload["password"],
+        "token": data["token"],
+        "user_id": data["user_id"],
+    }
