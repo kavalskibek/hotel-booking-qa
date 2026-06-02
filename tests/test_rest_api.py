@@ -18,7 +18,7 @@ class HealthHotel(BaseModel):
 
 
 
-
+@pytest.mark.smoke
 def test_get_health():
     url = 'http://localhost:8080/health'
     response = requests.get(url)

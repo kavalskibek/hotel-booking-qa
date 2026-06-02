@@ -80,3 +80,7 @@ def register_user():
         "token": data["token"],
         "user_id": data["user_id"],
     }
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "smoke: smoke tests")
+    config.addinivalue_line("markers", "regression: regression tests")
