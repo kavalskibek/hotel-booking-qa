@@ -1,9 +1,12 @@
+import uuid
+
 import grpc
 import pytest
 import psycopg2
 import os
 
 import requests
+from confluent_kafka import Consumer
 from dotenv import load_dotenv
 import sys
 
@@ -84,3 +87,16 @@ def register_user():
 def pytest_configure(config):
     config.addinivalue_line("markers", "smoke: smoke tests")
     config.addinivalue_line("markers", "regression: regression tests")
+
+
+@pytest.fixture
+def kafka_consumer():
+
+    consumer = Consumer({
+        'bootstrap.servers': 'localhost:29092',
+        'group.id': f'qa-{uuid.uuid4()}',
+        'auto.offset.reset': 'earliest',
+    })
+
+    yield consumer
+    consumer.close()
